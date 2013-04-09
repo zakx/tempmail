@@ -23,8 +23,9 @@ def welcome():
 	try:
 		domains = list(Domain.select())
 	except IndexError:
-		domains = [{'name':settings.MY_DOMAINS[0]},]
+		domains = []
 	about = settings.ABOUT
+	default_domain = settings.MY_DOMAINS[0]
 	return render_template('welcome.html', **locals())
 
 @app.route("/redirect", methods=['GET', 'POST'])
