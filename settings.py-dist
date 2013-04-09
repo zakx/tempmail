@@ -1,0 +1,24 @@
+# Configuration
+
+## Database configuration
+# SQLObject supports various databases, see
+# http://www.sqlobject.org/SQLObject.html#declaring-a-connection
+# for more details.
+# Please do not use sqlite in production, it'll be slow after some time.
+# DB_URI = "postgres://user:password@host/database"
+# DB_URI = "mysql://user:password@host/database"
+DB_URI = "sqlite:/full/path/test.db"
+
+## SMTP Server Configuration
+# Hosts to accept for mail
+MY_DOMAINS = ["myspamhost.example.com",]
+
+# Mail addresses to not accept mail from
+BLACKLIST_ADDRESSES = ["spam@example.com",]
+
+# Mail hostname parts to not accept mail from
+BLACKLIST_HOSTS = ["example.com",]
+
+# SMTPd configuration -- no need to change.
+SMTPD_HOST = "127.0.0.1" # IP to bind to
+SMTPD_PORT = 2500
