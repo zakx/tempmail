@@ -18,7 +18,7 @@ from models import User
 from __init__ import get_or_create_domain
 from __init__ import get_or_create_user
 
-class ConsoleMessageDelivery:
+class TempMailMessageDelivery:
 	implements(smtp.IMessageDelivery)
 
 	def receivedHeader(self, helo, origin, recipients):
@@ -39,10 +39,10 @@ class ConsoleMessageDelivery:
 	def validateTo(self, user):
 		# Only accept mail for our domains -- if set. Otherwise, anything goes.
 		if not MY_DOMAINS or user.dest.domain in MY_DOMAINS:
-			return lambda: ConsoleMessage(user)
+			return lambda: TempMailMessage(user)
 		raise smtp.SMTPBadRcpt(user)
 
-class ConsoleMessage:
+class TempMailMessage:
 	implements(smtp.IMessage)
 
 	def __init__(self, user):
@@ -90,22 +90,22 @@ class ConsoleMessage:
 		# There was an error, throw away the stored lines
 		self.lines = None
 
-class ConsoleSMTPFactory(smtp.SMTPFactory):
+class TempMailSMTPFactory(smtp.SMTPFactory):
 	def __init__(self):
 		smtp.SMTPFactory.__init__(self)
 		self.protocol = smtp.ESMTP
 
 	def buildProtocol(self, addr):
 		p = smtp.SMTPFactory.buildProtocol(self, addr)
-		p.delivery = ConsoleMessageDelivery()
+		p.delivery = TempMailMessageDelivery()
 		return p
 
 def main():
 	from twisted.application import internet
 	from twisted.application import service
 
-	a = service.Application("Console SMTP Server")
-	internet.TCPServer(SMTPD_PORT, ConsoleSMTPFactory(), interface=SMTPD_HOST or "127.0.0.1").setServiceParent(a)
+	a = service.Application("tempmail SMTP Server")
+	internet.TCPServer(SMTPD_PORT, TempMailSMTPFactory(), interface=SMTPD_HOST or "127.0.0.1").setServiceParent(a)
 
 	return a
 
