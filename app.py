@@ -57,7 +57,8 @@ def show_mail(user, mail_id, domain=settings.MY_DOMAINS[0]):
 	except IndexError:
 		abort(404)
 	new_mail = False
-	if divmod((datetime.datetime.now() - mail.ts).total_seconds(), 60)[0] <= 10:
+	#if divmod((datetime.datetime.now() - mail.ts).total_seconds(), 60)[0] <= 10:
+	if (datetime.datetime.now() - mail.ts) <= datetime.timedelta(seconds=600):
 		new_mail = True
 	mail_content = unicode(quopri.decodestring(mail.headers+"\r\n"+mail.body), 'utf-8', errors='ignore')
 	return render_template('show_mail.html', **locals())
@@ -70,7 +71,8 @@ def delete_mail(user, mail_id, domain=settings.MY_DOMAINS[0]):
 									Mail.q.id==mail_id)))[0]
 	except IndexError:
 		abort(404)
-	if divmod((datetime.datetime.now() - mail.ts).total_seconds(), 60)[0] > 10:
+	#if divmod((datetime.datetime.now() - mail.ts).total_seconds(), 60)[0] > 10:
+	if (datetime.datetime.now() - mail.ts) > datetime.timedelta(seconds=600):
 		abort(403)
 	Mail.delete(mail_id)
 	return redirect(url_for('list_mail', user=user, domain=domain))
