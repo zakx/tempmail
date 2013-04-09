@@ -54,7 +54,6 @@ class ConsoleMessage:
 
 	def eomReceived(self):
 		header = ""
-		#headers = {}
 		header_done = False
 		message = ""
 		for line in self.lines:
@@ -66,7 +65,6 @@ class ConsoleMessage:
 				continue
 			header += line + "\r\n"
 			thisHeader = line.split(": ", 1)
-			#headers[thisHeader[0]] = thisHeader[1]
 		headers = Parser().parsestr(header)
 		self.lines = None
 
