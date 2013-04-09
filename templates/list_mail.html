@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}{{user}}@{{domain}}{% endblock %}
+{% block content %}
+<h1><a href="/">Mail</a> for {{user}}@{{domain}}</h1>
+<table>
+	<tr>
+		<th>From</th>
+		<th>Subject</th>
+		<th>Timestamp</th>
+	</tr>
+{% for mail in mails %}
+	<tr class="{{ loop.cycle('', 'odd') }}">
+		<td>
+			<a href="/{{user}}@{{domain}}/{{mail.id}}/">{{ mail.headerFrom }}</a>
+		</td>
+		<td>
+			<a href="/{{user}}@{{domain}}/{{mail.id}}/">{{ mail.headerSubject }}</a>
+		</td>
+		<td><a href="/{{user}}@{{domain}}/{{mail.id}}/">{{ mail.ts }}</a></td>
+	</tr>
+{% else %}
+	<tr>
+		<td colspan="3">
+			There are no mails for {{user}}@{{domain}} yet.
+		</td>
+	</tr>
+{% endfor %}
+</table>
+{% endblock %}

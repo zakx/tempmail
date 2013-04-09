@@ -1,4 +1,5 @@
 import datetime
+from email.parser import Parser
 
 from twisted.internet import defer
 from twisted.mail import smtp
@@ -22,6 +23,7 @@ class ConsoleMessageDelivery:
 
 	def receivedHeader(self, helo, origin, recipients):
 		headers = "Received: from %s via %s (from %s)\r\n" % (helo[0], helo[1], origin)
+		headers += "X-Date: %s\r\n" % datetime.datetime.now()
 		headers += "X-HELO: %s (%s)\r\n" % (helo[0], helo[1])
 		headers += "X-MAIL-FROM: %s\r\n" % origin
 		for user in recipients:
@@ -52,7 +54,7 @@ class ConsoleMessage:
 
 	def eomReceived(self):
 		header = ""
-		headers = {}
+		#headers = {}
 		header_done = False
 		message = ""
 		for line in self.lines:
@@ -64,7 +66,8 @@ class ConsoleMessage:
 				continue
 			header += line + "\r\n"
 			thisHeader = line.split(": ", 1)
-			headers[thisHeader[0]] = thisHeader[1]
+			#headers[thisHeader[0]] = thisHeader[1]
+		headers = Parser().parsestr(header)
 		self.lines = None
 
 		connect()
@@ -77,8 +80,8 @@ class ConsoleMessage:
 			envelopeHeloAddress = self.user.helo[1],
 			envelopeFrom = str(self.user.orig),
 			envelopeTo = str(self.user.dest),
-			headerFrom = headers["From"] or "",
-			headerSubject = headers["Subject"] or "",
+			headerFrom = headers["from"] or "",
+			headerSubject = headers["subject"] or "",
 			headers = header,
 			body = message
 			)

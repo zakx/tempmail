@@ -1,5 +1,15 @@
 # Configuration
 
+DEBUG = False
+
+## General configuration
+# Your contact data for the front page, if you want. HTML.
+ABOUT = """Welcome! This <a href="https://github.com/zakx/tempmail">tempmail</a>
+installation is brought to you by:<br />
+<em>Your Name</em>, <a href="http://example.com/">Example Corp</a>.<br />
+You can contact me via <a href="mailto:admin@example.com">mail</a>.
+"""
+
 ## Database configuration
 # SQLObject supports various databases, see
 # http://www.sqlobject.org/SQLObject.html#declaring-a-connection

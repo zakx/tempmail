@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% block head %}
+		<meta charset='utf-8'>
+		<style type="text/css">
+			body {
+				font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+				font-size: 130%;
+				padding-left: 30px;
+				padding-right: 30px;
+				background-color: #fefefe;
+				line-height: 130%;
+			}
+			h1, h2 {
+				padding: 0;
+				margin-top: 20px;
+				margin-bottom: 9px;
+			}
+			input[type="text"] {
+				font-size: 80%;
+			}
+			input[type="submit"] {
+				font-size: 100%;
+				padding: 20px;
+			}
+			select, option {
+				margin-left: 10px;
+				font-size: 100%;
+			}
+			a {
+				color: #FA0;
+				text-decoration: none;
+			}
+			a.delete {
+				color: #F00;
+			}
+			a:hover {
+				text-decoration: underline;
+			}
+			::selection {
+				background: #fa0;
+			}
+			a::selection {
+				color: #007;
+			}
+			div#footer {
+				padding-top: 30px;
+				font-size: 80%;
+			}
+			table {
+				border-collapse: collapse;
+			}
+			tr, td {
+				padding: 10px;
+			}
+			tr.odd > td {
+				background-color: #ddd;
+			}
+			td > a {
+				color: #000;
+			}
+			div.newmail {
+				padding-top: 23px;
+			}
+			div.newmail > span {
+				border: #FA0 solid 4px;
+				background-color: #FB0;
+				padding: 10px;
+			}
+			.smalltext {
+				font-size: 80%;
+				max-width: 550px;
+				text-align: justify;
+			}
+			#pre-container {
+				font-size: 80%;
+				line-height: 110%;
+				max-width: 80%;
+				text-align: justify;
+				font-family: monospace;
+				display: block;
+				white-space: pre-wrap;
+			}
+		</style>
+	<title>tempmail – {% block title %}{% endblock %}</title>
+	{% endblock %}
+</head>
+<body>
+    <div id="content">{% block content %}{% endblock %}</div>
+    <div id="footer">
+        powered by <a href="https://github.com/zakx/tempmail/">tempmail</a>.
+    </div>
+</body>

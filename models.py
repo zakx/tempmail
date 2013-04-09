@@ -6,23 +6,26 @@ def connect():
 	sqlhub.processConnection = connectionForURI(DB_URI)
 
 class Domain(SQLObject):
-	name = StringCol(length=64, unique=True)
+	name = UnicodeCol(length=64, unique=True)
 
 class User(SQLObject):
-	name = StringCol(length=64, unique=True)
+	name = UnicodeCol(length=64, unique=True)
 	domain = ForeignKey('Domain')
 
 class Mail(SQLObject):
 	user = ForeignKey('User')
 	ts = DateTimeCol()
-	envelopeHeloHost = StringCol(length=128)
-	envelopeHeloAddress = StringCol(length=20)
-	envelopeFrom = StringCol(length=129)
-	envelopeTo = StringCol()
-	headerFrom = StringCol(length=255)
-	headerSubject = StringCol(length=255)
-	headers = StringCol()
-	body = StringCol()
+	envelopeHeloHost = UnicodeCol(length=128)
+	envelopeHeloAddress = UnicodeCol(length=20)
+	envelopeFrom = UnicodeCol(length=129)
+	envelopeTo = UnicodeCol()
+	headerFrom = UnicodeCol(length=255)
+	headerSubject = UnicodeCol(length=255)
+	headers = UnicodeCol()
+	body = UnicodeCol()
+
+	class sqlmeta:
+		defaultOrder = ["-ts",]
 
 if __name__ == "__main__":
 	connect()

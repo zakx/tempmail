@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}select inbox{% endblock %}
+{% block content %}
+<h1>tempmail</h1>
+<p>
+	{{about|safe}}
+</p>
+
+<h2>Select inbox</h2>
+<form method="POST" action="/redirect">
+	<input type="text" name="user" /> @
+	{%- if domains|length > 1 -%}
+		<select>
+		{%- for domain in domains -%}
+			<option>{{domain.name}}</option>
+		{%- endfor -%}
+		</select>
+	{%- else -%}
+		{{ domains.0.name }}
+	{%- endif %}
+	<input type="submit" value="Go!" />
+</form>
+<p class="smalltext">
+	Just enter any name and you'll be immediately taken to that inbox. You don't have to create addresses
+	before using them.<br />
+	If you cannot think of a name, you can also use a <a href="/redirect?random=1">random address</a>.
+</p>
+{% endblock %}

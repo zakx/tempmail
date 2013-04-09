@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}{{mail.headerSubject}}{% endblock %}
+{% block content %}
+<h1>Mail #{{mail_id}} for <a href="/{{user}}@{{domain}}/">{{user}}@{{domain}}</a></h1>
+{% if mail %}
+{% if new_mail %}
+<div class="newmail">
+	<span>
+		This mail has recently arrived.
+		You can <a href="delete/" class="delete">delete</a> this mail within 10 minutes.
+	</span>
+</div>
+{% endif %}
+<div id="pre-container">
+{{ mail_content }}
+</div>
+{% else %}
+	Mail not found.
+{% endif %}
+{% endblock %}
