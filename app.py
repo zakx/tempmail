@@ -23,7 +23,7 @@ def welcome():
 	try:
 		domains = list(Domain.select())
 	except IndexError:
-		domains = [settings.MY_DOMAINS[0],]
+		domains = [{'name':settings.MY_DOMAINS[0]},]
 	about = settings.ABOUT
 	return render_template('welcome.html', **locals())
 
