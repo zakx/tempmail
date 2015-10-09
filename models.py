@@ -1,16 +1,20 @@
 from sqlobject import *
 
-from settings import DB_URI
+from .settings import DB_URI
+
 
 def connect():
 	sqlhub.processConnection = connectionForURI(DB_URI)
 
+
 class Domain(SQLObject):
 	name = UnicodeCol(length=64, unique=True)
+
 
 class User(SQLObject):
 	name = UnicodeCol(length=64, unique=True)
 	domain = ForeignKey('Domain')
+
 
 class Mail(SQLObject):
 	user = ForeignKey('User')
@@ -25,15 +29,15 @@ class Mail(SQLObject):
 	body = UnicodeCol()
 
 	class sqlmeta:
-		defaultOrder = ["-ts",]
+		defaultOrder = ["-ts", ]
 
 if __name__ == "__main__":
 	connect()
-	print "Creating tables..."
+	print("Creating tables...")
 	Domain.createTable()
 	User.createTable()
 	Mail.createTable()
-	print "Done."
+	print("Done.")
 
 """
 In [20]: list(Domain.select(Domain.q.name=="tm.zakx.de"))

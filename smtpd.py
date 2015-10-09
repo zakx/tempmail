@@ -3,20 +3,18 @@ from email.parser import Parser
 
 from twisted.internet import defer
 from twisted.mail import smtp
-from twisted.mail.mail import MailService
 from zope.interface import implements
 
-from settings import BLACKLIST_ADDRESSES
-from settings import BLACKLIST_HOSTS
-from settings import MY_DOMAINS
-from settings import SMTPD_HOST
-from settings import SMTPD_PORT
-from models import connect
-from models import Domain
-from models import Mail
-from models import User
-from __init__ import get_or_create_domain
-from __init__ import get_or_create_user
+from .settings import BLACKLIST_ADDRESSES
+from .settings import BLACKLIST_HOSTS
+from .settings import MY_DOMAINS
+from .settings import SMTPD_HOST
+from .settings import SMTPD_PORT
+from .models import connect
+from .models import Mail
+from .__init__ import get_or_create_domain
+from .__init__ import get_or_create_user
+
 
 class TempMailMessageDelivery:
 	implements(smtp.IMessageDelivery)
@@ -41,6 +39,7 @@ class TempMailMessageDelivery:
 		if not MY_DOMAINS or user.dest.domain in MY_DOMAINS:
 			return lambda: TempMailMessage(user)
 		raise smtp.SMTPBadRcpt(user)
+
 
 class TempMailMessage:
 	implements(smtp.IMessage)
@@ -72,23 +71,24 @@ class TempMailMessage:
 		domain = get_or_create_domain(self.user.dest.domain)
 		user = get_or_create_user(self.user.dest.local, domain)
 		Mail(
-			user = user,
-			ts = datetime.datetime.now(),
-			envelopeHeloHost = self.user.helo[0],
-			envelopeHeloAddress = self.user.helo[1],
-			envelopeFrom = str(self.user.orig),
-			envelopeTo = str(self.user.dest),
-			headerFrom = headers["from"] or "",
-			headerSubject = headers["subject"] or "",
-			headers = header,
-			body = message
-			)
+			user=user,
+			ts=datetime.datetime.now(),
+			envelopeHeloHost=self.user.helo[0],
+			envelopeHeloAddress=self.user.helo[1],
+			envelopeFrom=str(self.user.orig),
+			envelopeTo=str(self.user.dest),
+			headerFrom=headers["from"] or "",
+			headerSubject=headers["subject"] or "",
+			headers=header,
+			body=message
+		)
 
 		return defer.succeed(None)
 
 	def connectionLost(self):
 		# There was an error, throw away the stored lines
 		self.lines = None
+
 
 class TempMailSMTPFactory(smtp.SMTPFactory):
 	def __init__(self):
@@ -99,6 +99,7 @@ class TempMailSMTPFactory(smtp.SMTPFactory):
 		p = smtp.SMTPFactory.buildProtocol(self, addr)
 		p.delivery = TempMailMessageDelivery()
 		return p
+
 
 def main():
 	from twisted.application import internet
