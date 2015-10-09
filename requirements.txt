@@ -1,8 +1,0 @@
-Flask==0.9
-FormEncode==1.2.6
-Jinja2==2.6
-SQLObject==1.3.2
-Twisted==13.0.0
-Werkzeug==0.8.3
-wsgiref==0.1.2
-zope.interface==4.0.5
