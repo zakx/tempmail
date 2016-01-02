@@ -1,48 +1,36 @@
-from sqlobject import *
+from datetime import datetime
+from pony import orm
 
-from .settings import DB_URI
-
-
-def connect():
-	sqlhub.processConnection = connectionForURI(DB_URI)
+db = orm.Database("sqlite", "dev.sqlite", create_db=True)
 
 
-class Domain(SQLObject):
-	name = UnicodeCol(length=64, unique=True)
+class Domain(db.Entity):
+    id = orm.PrimaryKey(int, auto=True)
+    name = orm.Required(str, unique=True)
+    users = orm.Set("User")
+    visible = orm.Required(bool, default=True)
 
 
-class User(SQLObject):
-	name = UnicodeCol(length=64, unique=True)
-	domain = ForeignKey('Domain')
+class User(db.Entity):
+    id = orm.PrimaryKey(int, auto=True)
+    name = orm.Required(str)
+    domain = orm.Required(Domain)
+    mails = orm.Set("Mail")
+    acceptNewMail = orm.Required(bool, default=True)
+    password = orm.Optional(str)
 
 
-class Mail(SQLObject):
-	user = ForeignKey('User')
-	ts = DateTimeCol()
-	envelopeHeloHost = UnicodeCol(length=128)
-	envelopeHeloAddress = UnicodeCol(length=20)
-	envelopeFrom = UnicodeCol(length=129)
-	envelopeTo = UnicodeCol()
-	headerFrom = UnicodeCol(length=255)
-	headerSubject = UnicodeCol(length=255)
-	headers = UnicodeCol()
-	body = UnicodeCol()
+class Mail(db.Entity):
+    id = orm.PrimaryKey(int, auto=True)
+    user = orm.Required(User)
+    ts = orm.Required(datetime)
+    envelopeHeloHost = orm.Optional(str, 128)
+    envelopeHeloAddress = orm.Optional(str, 20)
+    envelopeFrom = orm.Optional(str)
+    headerFrom = orm.Optional(str)
+    headerSubject = orm.Optional(str)
+    headers = orm.Optional(orm.LongStr)
+    body = orm.Optional(orm.LongStr)
 
-	class sqlmeta:
-		defaultOrder = ["-ts", ]
 
-if __name__ == "__main__":
-	connect()
-	print("Creating tables...")
-	Domain.createTable()
-	User.createTable()
-	Mail.createTable()
-	print("Done.")
-
-"""
-In [20]: list(Domain.select(Domain.q.name=="tm.zakx.de"))
-Out[20]: [<Domain 1 name='tm.zakx.de'>]
-
-In [21]: list(Domain.select(Domain.q.name=="tm.zakx.dess"))
-Out[21]: []
-"""
+db.generate_mapping(create_tables=True)

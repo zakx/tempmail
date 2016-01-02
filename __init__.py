@@ -1,19 +1,22 @@
-from sqlobject import AND
+from pony import orm
+import models
 
-from . import models
 
-
+@orm.db_session
 def get_or_create_domain(name):
 	try:
-		domain = models.Domain.select(models.Domain.q.name == name)[0]
+		domain = orm.get(d for d in models.Domain if d.name == name)
 	except IndexError:
 		domain = models.Domain(name=name)
+		orm.commit()
 	return domain
 
 
+@orm.db_session
 def get_or_create_user(name, domain):
 	try:
-		user = models.User.select(AND(models.User.q.name == name, models.User.q.domain == domain))[0]
+		user = orm.get(u for u in models.User if u.name == name and u.domain.name == domain)
 	except IndexError:
-		user = models.User(name=name, domain=domain)
+		user = models.User(name=name, domain=orm.get(d for d in models.Domain if d.name == domain))
+		orm.commit()
 	return user

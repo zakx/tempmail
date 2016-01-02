@@ -21,14 +21,14 @@ DB_URI = "sqlite:/full/path/test.db"
 
 ## SMTP Server Configuration
 # Hosts to accept for mail
-MY_DOMAINS = ["myspamhost.example.com",]
+MY_DOMAINS = ["myspamhost.example.com", ]
 
 # Mail addresses to not accept mail from
-BLACKLIST_ADDRESSES = ["spam@example.com",]
+BLACKLIST_ADDRESSES = ["spam@example.com", ]
 
 # Mail hostname parts to not accept mail from
-BLACKLIST_HOSTS = ["example.com",]
+BLACKLIST_HOSTS = ["example.com", ]
 
 # SMTPd configuration -- no need to change.
-SMTPD_HOST = "127.0.0.1" # IP to bind to
+SMTPD_HOST = "127.0.0.1"  # IP to bind to
 SMTPD_PORT = 2500

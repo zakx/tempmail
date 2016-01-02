@@ -4,16 +4,16 @@ from email.parser import Parser
 from twisted.internet import defer
 from twisted.mail import smtp
 from zope.interface import implements
+from pony import orm
 
-from .settings import BLACKLIST_ADDRESSES
-from .settings import BLACKLIST_HOSTS
-from .settings import MY_DOMAINS
-from .settings import SMTPD_HOST
-from .settings import SMTPD_PORT
-from .models import connect
-from .models import Mail
-from .__init__ import get_or_create_domain
-from .__init__ import get_or_create_user
+from settings import BLACKLIST_ADDRESSES
+from settings import BLACKLIST_HOSTS
+from settings import MY_DOMAINS
+from settings import SMTPD_HOST
+from settings import SMTPD_PORT
+from models import Mail
+from __init__ import get_or_create_domain
+from __init__ import get_or_create_user
 
 
 class TempMailMessageDelivery:
@@ -51,6 +51,7 @@ class TempMailMessage:
 	def lineReceived(self, line):
 		self.lines.append(line)
 
+	@orm.db_session
 	def eomReceived(self):
 		header = ""
 		header_done = False
@@ -67,7 +68,6 @@ class TempMailMessage:
 		headers = Parser().parsestr(header)
 		self.lines = None
 
-		connect()
 		domain = get_or_create_domain(self.user.dest.domain)
 		user = get_or_create_user(self.user.dest.local, domain)
 		Mail(
@@ -82,6 +82,7 @@ class TempMailMessage:
 			headers=header,
 			body=message
 		)
+		orm.commit()
 
 		return defer.succeed(None)
 
