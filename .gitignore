@@ -37,3 +37,4 @@ nosetests.xml
 settings.py
 *.db
 *.pid
+dev.sqlite
