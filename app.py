@@ -90,4 +90,4 @@ def delete_mail(user, mail_id, domain=settings.MY_DOMAINS[0]):
 
 if __name__ == "__main__":
 	app.debug = settings.DEBUG
-	app.run()
+	app.run(host="0.0.0.0")
